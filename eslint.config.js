@@ -1,33 +1,40 @@
 import globals from "globals";
+import globals from "globals";
 import pluginJs from "@eslint/js";
 import pluginVue from "eslint-plugin-vue";
 
-/** @type {import('eslint').Linter.Config[]} */
+/** @type {import('eslint').Linter.FlatConfig[]} */
 const eslintConfig = [
+  // Configuración global para archivos .js, .vue, etc.
   {
     files: ["**/*.{js,mjs,cjs,vue}"],
     languageOptions: { globals: globals.browser },
+    plugins: {
+      vue: pluginVue,
+    },
+    rules: {
+      // Puedes agregar reglas generales aquí
+    },
   },
-  pluginJs.configs.recommended,
-  ...pluginVue.configs["flat/essential"],
+  
+  // Configuración específica para JSX
   {
-    overrides: [
-      {
-        files: ["*.jsx"],
-        parserOptions: {
-          ecmaVersion: 12,
-          sourceType: "module",
-        },
-        rules: {
-          // Aquí puedes definir reglas adicionales para JSX
-        },
+    files: ["*.jsx"],
+    languageOptions: {
+      parserOptions: {
+        ecmaVersion: 12,
+        sourceType: "module",
       },
-    ],
+    },
+    rules: {
+      // Reglas específicas para JSX
+    },
   },
-  // Esto es para asegurarte de que ESLint escanee el directorio correcto
-  {
-    root: true,
-  },
+
+  // Configuración recomendada para JavaScript
+  pluginJs.configs.recommended,
+  // Configuración recomendada para Vue
+  ...pluginVue.configs["flat/essential"],
 ];
 
 export default eslintConfig;
