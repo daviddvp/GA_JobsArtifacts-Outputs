@@ -1,0 +1,92 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - main
+  issues:
+    types:
+      - opened
+      - edited
+      - deleted
+      - transferred
+      - pinned
+      - unpinned
+      - closed
+      - reopened
+      - assigned
+      - unassigned
+      - labeled
+      - unlabeled
+      - locked
+      - unlocked
+      - milestoned
+      - demilestoned
+
+jobs:
+  log-actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mostrar acción del evento
+        run: |
+          echo "Action: ${{ github.event.action }}"
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm ci
+      - name: Run Lint
+        run: npm run lint
+      - name: Lint
+        run: echo "analyzing code..."
+  test:
+    needs: lint
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm ci
+      - name: Run test
+        run: npm run test
+      - name: Test
+        run: echo "testing code..."
+  build:
+    needs: test
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm ci
+      - name: Run build
+        run: npm run build
+      - name: Build
+        run: echo "building code..."
+      - name: Upload artifact # Descarga los archivos de la carpeta dist
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist-files
+          path: |
+            dist
+            package.json  
+  deploy:
+    needs: test
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Deploy
+        run: echo "Deploying..."
+        
