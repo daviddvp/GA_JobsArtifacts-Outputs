@@ -1,5 +1,3 @@
-import globals from "globals";
-import globals from "globals";
 import pluginJs from "@eslint/js";
 import pluginVue from "eslint-plugin-vue";
 
@@ -8,7 +6,7 @@ const eslintConfig = [
   // Configuración global para archivos .js, .vue, etc.
   {
     files: ["**/*.{js,mjs,cjs,vue}"],
-    languageOptions: { globals: globals.browser },
+    languageOptions: { globals: { ...require("globals").browser } }, // Utilizando globals de forma correcta
     plugins: {
       vue: pluginVue,
     },
@@ -38,3 +36,4 @@ const eslintConfig = [
 ];
 
 export default eslintConfig;
+
