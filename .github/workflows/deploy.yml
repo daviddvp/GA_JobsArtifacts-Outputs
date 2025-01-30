@@ -1,4 +1,4 @@
-ame: Deploy website
+name: Deploy website
 on:
   push:
     branches:
